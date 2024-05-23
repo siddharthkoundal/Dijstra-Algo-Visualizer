@@ -36,3 +36,42 @@
     transform: rotate(360deg);
   }
 }
+
+.visualize-button {
+  color: #20bf6b;
+  text-transform: uppercase;
+  background: #ffffff;
+  padding: 7.5px;
+  border: 3px solid #20bf6b;
+  border-radius: 6px;
+  display: inline-block;
+  transition: all 0.3s ease 0s;
+  margin-bottom: 1px;
+}
+
+.visualize-button:hover {
+  color: #494949;
+  border-radius: 50px;
+  border-color: #494949;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+}
+
+.reset-button {
+  color: red;
+  text-transform: uppercase;
+  background: #ffffff;
+  padding: 3px;
+  border: 3px solid red;
+  border-radius: 6px;
+  display: inline-block;
+  transition: all 0.3s ease 0s;
+}
+
+.reset-button:hover {
+  color: #494949;
+  border-radius: 50px;
+  border-color: #494949;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+}
