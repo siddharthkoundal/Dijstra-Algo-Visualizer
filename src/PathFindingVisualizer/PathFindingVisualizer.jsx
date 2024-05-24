@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Node from "./Node/Node";
 import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
+import { bfs } from "../algorithms/bfs";
+import { dfs } from "../algorithms/dfs";
 import "./PathFindingVisualizer.css";
 
 const START_NODE_ROW = 10;
@@ -63,6 +65,54 @@ export default class PathFindingVisualizer extends Component {
     }
   }
 
+  animateBFS(visitedNodesInOrder, nodesInShortestPathOrder) {
+    let i = 0;
+
+    const animate = () => {
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          this.animateShortestPath(nodesInShortestPathOrder);
+        }, this.state.animationSpeed * i);
+        return;
+      }
+
+      const node = visitedNodesInOrder[i];
+      document.getElementById(`node-${node.row}-${node.col}`).className =
+        "node node-visited";
+
+      i++;
+      setTimeout(() => {
+        requestAnimationFrame(animate);
+      }, this.state.animationSpeed);
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+  animateDFS(visitedNodesInOrder, nodesInShortestPathOrder) {
+    let i = 0;
+
+    const animate = () => {
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          this.animateShortestPath(nodesInShortestPathOrder);
+        }, this.state.animationSpeed * i);
+        return;
+      }
+
+      const node = visitedNodesInOrder[i];
+      document.getElementById(`node-${node.row}-${node.col}`).className =
+        "node node-visited";
+
+      i++;
+      setTimeout(() => {
+        requestAnimationFrame(animate);
+      }, this.state.animationSpeed);
+    };
+
+    requestAnimationFrame(animate);
+  }
+
   visualizeDijkstra() {
     const { grid } = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
@@ -70,6 +120,24 @@ export default class PathFindingVisualizer extends Component {
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+  visualizeBFS() {
+    const { grid } = this.state;
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+  visualizeDFS() {
+    const { grid } = this.state;
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = dfs(grid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateDFS(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
   resetBoard() {
@@ -91,6 +159,10 @@ export default class PathFindingVisualizer extends Component {
     this.setState({ grid });
   }
 
+  // handleAnimationSpeedChange(speed) {
+  //   this.setState({ animationSpeed: speed });
+  // }
+
   render() {
     const { grid, mouseIsPressed } = this.state;
 
@@ -106,9 +178,32 @@ export default class PathFindingVisualizer extends Component {
           >
             Visualize Dijkstra's Algorithm
           </button>
+          <button
+            className="control-button"
+            onClick={() => this.visualizeBFS()}
+          >
+            Visualize BFS
+          </button>
+          <button
+            className="control-button"
+            onClick={() => this.visualizeDFS()}
+          >
+            Visualize DFS
+          </button>
           <button className="control-button" onClick={() => this.resetBoard()}>
             Reset
           </button>
+          {/* <label htmlFor="animationSpeed">Animation Speed: </label>
+          <input
+            type="range"
+            id="animationSpeed"
+            min="1"
+            max="200"
+            value={animationSpeed}
+            onChange={(e) =>
+              this.handleAnimationSpeedChange(parseInt(e.target.value))
+            }
+          /> */}
         </div>
         <div className="grid">
           {grid.map((row, rowIdx) => (
