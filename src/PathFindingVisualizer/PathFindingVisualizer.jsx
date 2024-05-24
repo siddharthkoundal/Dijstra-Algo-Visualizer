@@ -3,6 +3,7 @@ import Node from "./Node/Node";
 import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import { bfs } from "../algorithms/bfs";
 import { dfs } from "../algorithms/dfs";
+import { generateMaze } from "../algorithms/maze"; // Import the maze generation function
 import "./PathFindingVisualizer.css";
 
 const START_NODE_ROW = 10;
@@ -140,6 +141,11 @@ export default class PathFindingVisualizer extends Component {
     this.animateDFS(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
+  generateMaze() {
+    const grid = generateMaze(this.state.grid);
+    this.setState({ grid });
+  }
+
   resetBoard() {
     const grid = getInitialGrid();
     grid.forEach((row) => {
@@ -189,6 +195,12 @@ export default class PathFindingVisualizer extends Component {
             onClick={() => this.visualizeDFS()}
           >
             Visualize DFS
+          </button>
+          <button
+            className="control-button"
+            onClick={() => this.generateMaze()}
+          >
+            Generate Maze
           </button>
           <button className="control-button" onClick={() => this.resetBoard()}>
             Reset
