@@ -1,16 +1,28 @@
 // algorithms/dfs.js
 export function dfs(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
-  const stack = [];
-  stack.push(startNode);
+  const stack = [startNode];
+
+  // Ensure the start node is not the finish node
+  if (startNode === finishNode) {
+    visitedNodesInOrder.push(startNode);
+    return visitedNodesInOrder;
+  }
+
   while (stack.length !== 0) {
     const currentNode = stack.pop();
+
+    // Skip nodes that are already visited
+    if (currentNode.isVisited) continue;
+
+    currentNode.isVisited = true;
+    visitedNodesInOrder.push(currentNode);
+
     if (currentNode === finishNode) return visitedNodesInOrder;
-    if (!currentNode.isVisited) {
-      currentNode.isVisited = true;
-      visitedNodesInOrder.push(currentNode);
-      const neighbors = getUnvisitedNeighbors(currentNode, grid);
-      for (const neighbor of neighbors) {
+
+    const neighbors = getUnvisitedNeighbors(currentNode, grid);
+    for (const neighbor of neighbors) {
+      if (!neighbor.isVisited) {
         neighbor.previousNode = currentNode;
         stack.push(neighbor);
       }

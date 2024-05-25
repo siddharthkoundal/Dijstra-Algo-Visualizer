@@ -1,9 +1,11 @@
+// PathFindingVisualizer.jsx
 import React, { Component } from "react";
 import Node from "./Node/Node";
+import Navbar from "../Components/Navbar";
 import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import { bfs } from "../algorithms/bfs";
 import { dfs } from "../algorithms/dfs";
-import { generateMaze } from "../algorithms/maze"; // Import the maze generation function
+import { generateMaze } from "../algorithms/maze";
 import "./PathFindingVisualizer.css";
 
 const START_NODE_ROW = 10;
@@ -11,27 +13,49 @@ const START_NODE_COL = 15;
 const FINISH_NODE_ROW = 10;
 const FINISH_NODE_COL = 35;
 
+const ANIMATION_SPEED = 10; // milliseconds
 export default class PathFindingVisualizer extends Component {
   constructor() {
     super();
     this.state = {
       grid: [],
       mouseIsPressed: false,
+      selectingStart: false,
+      selectingEnd: false,
+      startNode: { row: START_NODE_ROW, col: START_NODE_COL },
+      finishNode: { row: FINISH_NODE_ROW, col: FINISH_NODE_COL },
     };
   }
 
   componentDidMount() {
-    const grid = getInitialGrid();
+    const grid = getInitialGrid(this.state.startNode, this.state.finishNode);
     this.setState({ grid });
   }
 
   handleMouseDown(row, col) {
-    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-    this.setState({ grid: newGrid, mouseIsPressed: true });
+    if (this.state.selectingStart) {
+      this.setState({
+        startNode: { row, col },
+        selectingStart: false,
+      });
+    } else if (this.state.selectingEnd) {
+      this.setState({
+        finishNode: { row, col },
+        selectingEnd: false,
+      });
+    } else {
+      const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+      this.setState({ grid: newGrid, mouseIsPressed: true });
+    }
   }
 
   handleMouseEnter(row, col) {
-    if (!this.state.mouseIsPressed) return;
+    if (
+      !this.state.mouseIsPressed ||
+      this.state.selectingStart ||
+      this.state.selectingEnd
+    )
+      return;
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid });
   }
@@ -45,14 +69,14 @@ export default class PathFindingVisualizer extends Component {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           this.animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
+        }, ANIMATION_SPEED * i);
         return;
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "node node-visited";
-      }, 10 * i);
+      }, ANIMATION_SPEED * i);
     }
   }
 
@@ -62,92 +86,83 @@ export default class PathFindingVisualizer extends Component {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "node node-shortest-path";
-      }, 50 * i);
+      }, ANIMATION_SPEED * i);
     }
   }
 
   animateBFS(visitedNodesInOrder, nodesInShortestPathOrder) {
-    let i = 0;
-
-    const animate = () => {
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           this.animateShortestPath(nodesInShortestPathOrder);
-        }, this.state.animationSpeed * i);
+        }, ANIMATION_SPEED * i);
         return;
       }
-
-      const node = visitedNodesInOrder[i];
-      document.getElementById(`node-${node.row}-${node.col}`).className =
-        "node node-visited";
-
-      i++;
       setTimeout(() => {
-        requestAnimationFrame(animate);
-      }, this.state.animationSpeed);
-    };
-
-    requestAnimationFrame(animate);
+        const node = visitedNodesInOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "node node-visited";
+      }, ANIMATION_SPEED * i);
+    }
   }
 
   animateDFS(visitedNodesInOrder, nodesInShortestPathOrder) {
-    let i = 0;
-
-    const animate = () => {
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           this.animateShortestPath(nodesInShortestPathOrder);
-        }, this.state.animationSpeed * i);
+        }, ANIMATION_SPEED * i);
         return;
       }
-
-      const node = visitedNodesInOrder[i];
-      document.getElementById(`node-${node.row}-${node.col}`).className =
-        "node node-visited";
-
-      i++;
       setTimeout(() => {
-        requestAnimationFrame(animate);
-      }, this.state.animationSpeed);
-    };
-
-    requestAnimationFrame(animate);
+        const node = visitedNodesInOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "node node-visited";
+      }, ANIMATION_SPEED * i);
+    }
   }
 
-  visualizeDijkstra() {
-    const { grid } = this.state;
-    const startNode = grid[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
-  }
+  visualizeAlgorithm(algorithm) {
+    const { grid, startNode, finishNode } = this.state;
+    const start = grid[startNode.row][startNode.col];
+    const finish = grid[finishNode.row][finishNode.col];
+    let visitedNodesInOrder, nodesInShortestPathOrder;
 
-  visualizeBFS() {
-    const { grid } = this.state;
-    const startNode = grid[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder = bfs(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
-  }
-
-  visualizeDFS() {
-    const { grid } = this.state;
-    const startNode = grid[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder = dfs(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDFS(visitedNodesInOrder, nodesInShortestPathOrder);
+    switch (algorithm) {
+      case "dijkstra":
+        visitedNodesInOrder = dijkstra(grid, start, finish);
+        nodesInShortestPathOrder = getNodesInShortestPathOrder(finish);
+        this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+        break;
+      case "bfs":
+        visitedNodesInOrder = bfs(grid, start, finish);
+        nodesInShortestPathOrder = getNodesInShortestPathOrder(finish);
+        this.animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
+        break;
+      case "dfs":
+        visitedNodesInOrder = dfs(grid, start, finish);
+        nodesInShortestPathOrder = getNodesInShortestPathOrder(finish);
+        this.animateDFS(visitedNodesInOrder, nodesInShortestPathOrder);
+        break;
+      default:
+        break;
+    }
   }
 
   generateMaze() {
-    const grid = generateMaze(this.state.grid);
-    this.setState({ grid });
+    const { grid } = this.state;
+    const newGrid = generateMaze(
+      grid,
+      this.state.startNode.row,
+      this.state.startNode.col,
+      this.state.finishNode.row,
+      this.state.finishNode.col
+    );
+    this.setState({ grid: newGrid });
   }
 
   resetBoard() {
-    const grid = getInitialGrid();
+    const grid = getInitialGrid(this.state.startNode, this.state.finishNode);
     grid.forEach((row) => {
       row.forEach((node) => {
         const nodeElement = document.getElementById(
@@ -165,58 +180,26 @@ export default class PathFindingVisualizer extends Component {
     this.setState({ grid });
   }
 
-  // handleAnimationSpeedChange(speed) {
-  //   this.setState({ animationSpeed: speed });
-  // }
+  setSelectingStart = () => {
+    this.setState({ selectingStart: true, selectingEnd: false });
+  };
+
+  setSelectingEnd = () => {
+    this.setState({ selectingEnd: true, selectingStart: false });
+  };
 
   render() {
     const { grid, mouseIsPressed } = this.state;
 
     return (
       <div className="container">
-        <header className="header">
-          <h1>Dijkstra Algorithm Visualizer</h1>
-        </header>
-        <div className="controls">
-          <button
-            className="control-button"
-            onClick={() => this.visualizeDijkstra()}
-          >
-            Visualize Dijkstra's Algorithm
-          </button>
-          <button
-            className="control-button"
-            onClick={() => this.visualizeBFS()}
-          >
-            Visualize BFS
-          </button>
-          <button
-            className="control-button"
-            onClick={() => this.visualizeDFS()}
-          >
-            Visualize DFS
-          </button>
-          <button
-            className="control-button"
-            onClick={() => this.generateMaze()}
-          >
-            Generate Maze
-          </button>
-          <button className="control-button" onClick={() => this.resetBoard()}>
-            Reset
-          </button>
-          {/* <label htmlFor="animationSpeed">Animation Speed: </label>
-          <input
-            type="range"
-            id="animationSpeed"
-            min="1"
-            max="200"
-            value={animationSpeed}
-            onChange={(e) =>
-              this.handleAnimationSpeedChange(parseInt(e.target.value))
-            }
-          /> */}
-        </div>
+        <Navbar
+          onVisualize={(algorithm) => this.visualizeAlgorithm(algorithm)}
+          onGenerateMaze={() => this.generateMaze()}
+          onReset={() => this.resetBoard()}
+          onSetStart={() => this.setSelectingStart()}
+          onSetEnd={() => this.setSelectingEnd()}
+        />
         <div className="grid">
           {grid.map((row, rowIdx) => (
             <div key={rowIdx} className="grid-row">
@@ -234,7 +217,7 @@ export default class PathFindingVisualizer extends Component {
                     onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
                     onMouseUp={() => this.handleMouseUp()}
                     row={row}
-                  ></Node>
+                  />
                 );
               })}
             </div>
@@ -245,24 +228,24 @@ export default class PathFindingVisualizer extends Component {
   }
 }
 
-const getInitialGrid = () => {
+const getInitialGrid = (startNode, finishNode) => {
   const grid = [];
   for (let row = 0; row < 20; row++) {
     const currentRow = [];
     for (let col = 0; col < 50; col++) {
-      currentRow.push(createNode(col, row));
+      currentRow.push(createNode(col, row, startNode, finishNode));
     }
     grid.push(currentRow);
   }
   return grid;
 };
 
-const createNode = (col, row) => {
+const createNode = (col, row, startNode, finishNode) => {
   return {
     col,
     row,
-    isStart: row === START_NODE_ROW && col === START_NODE_COL,
-    isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+    isStart: row === startNode.row && col === startNode.col,
+    isFinish: row === finishNode.row && col === finishNode.col,
     distance: Infinity,
     isVisited: false,
     isWall: false,
