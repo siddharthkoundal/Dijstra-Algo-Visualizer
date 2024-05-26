@@ -6,27 +6,57 @@
   padding-top: 0px;
 }
 
-.header {
-  margin-bottom: 20px;
+.performance-metrics {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 10px;
+  background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+  border: 1px solid #4d4d4d;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.controls {
-  margin-bottom: 20px;
+.performance-metrics div {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  margin: 0 5px;
+  font-size: 14px;
+  color: #f0f0f0;
+  background: #262626;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.control-button {
-  padding: 10px 20px;
-  margin: 5px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+/* .performance-metrics div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+} */
+
+.performance-metrics div span {
+  display: block;
+  font-weight: bold;
+  font-size: 21px;
+  color: #ff2e63;
+  margin-bottom: 5px;
 }
 
-.control-button:hover {
-  background-color: #45a049;
+@media (max-width: 600px) {
+  .performance-metrics {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .performance-metrics div {
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+  }
 }
 
 .grid {
@@ -40,6 +70,16 @@
   display: flex;
 }
 
+.footer {
+  margin-top: 20px;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+  color: #ff2e63;
+  font-size: 16px;
+  border-top: 1px solid #4d4d4d;
+}
+
 @media (max-width: 600px) {
   .grid-row {
     flex-direction: column;
@@ -49,4 +89,34 @@
     width: 100%;
     margin: 5px 0;
   }
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 10px;
+  background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+  border: 1px solid #4d4d4d;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.legend-label {
+  font-size: 14px;
+  color: #f0f0f0;
 }

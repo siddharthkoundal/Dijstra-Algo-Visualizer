@@ -1,5 +1,42 @@
+html,
 body {
-  margin-top: 0;
+  margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  background-color: #0f0f0f; /* Dark background color */
+  color: #e0e0e0; /* Light text color */
+}
+
+/* customScrollbar.css */
+
+/* For Webkit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #262626; /* Dark scrollbar track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555; /* Light scrollbar thumb */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888; /* Lighter scrollbar thumb on hover */
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #262626; /* Light scrollbar thumb and dark scrollbar track */
+}
+
+/* For Internet Explorer and Edge */
+body {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }

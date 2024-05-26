@@ -1,24 +1,20 @@
-body,
-html {
-  margin: 0;
-  padding: 0;
-}
-
 .navbar {
   width: 100%;
-  background-color: #333;
+  background-color: #1a1a1a; /* Dark navbar background */
   overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 20px;
   margin: 0; /* Ensure no margin above the navbar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow */
 }
 
 .navbar-title {
-  color: white;
+  color: #e0e0e0; /* Light navbar title color */
   font-size: 24px;
   font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
 }
 
 .navbar-controls {
@@ -32,19 +28,55 @@ html {
   border-radius: 5px;
   border: none;
   font-size: 16px;
+  background-color: #262626; /* Dark select background */
+  color: #e0e0e0; /* Light select text color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.navbar-select:hover,
+.navbar-select:focus {
+  background-color: #3a3a3a; /* Slightly lighter background on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
 }
 
 .navbar-button {
-  background-color: #4caf50;
-  color: white;
+  background: linear-gradient(
+    145deg,
+    #ff5e6c,
+    #f67280
+  ); /* Gradient background */
+  color: #e0e0e0; /* Light button text color */
   border: none;
   padding: 10px 20px;
   margin: 0 5px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
 }
 
 .navbar-button:hover {
-  background-color: #45a049;
+  background: linear-gradient(
+    145deg,
+    #e14959,
+    #e05970
+  ); /* Darker gradient on hover */
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
+}
+
+.navbar-button.selecting {
+  background: #ff2e63; /* Different gradient for selecting state */
+  color: #ffffff; /* Light text color */
+}
+
+.navbar-button.selecting:hover {
+  background: linear-gradient(
+    145deg,
+    #e14959,
+    #e05970
+  ); /* Darker green gradient on hover */
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
 }

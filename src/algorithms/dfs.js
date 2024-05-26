@@ -2,6 +2,8 @@
 export function dfs(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
   const stack = [startNode];
+  const shortestPath = [];
+  let foundFinishNode = false;
 
   // Ensure the start node is not the finish node
   if (startNode === finishNode) {
@@ -18,7 +20,10 @@ export function dfs(grid, startNode, finishNode) {
     currentNode.isVisited = true;
     visitedNodesInOrder.push(currentNode);
 
-    if (currentNode === finishNode) return visitedNodesInOrder;
+    if (currentNode === finishNode) {
+      foundFinishNode = true;
+      break;
+    }
 
     const neighbors = getUnvisitedNeighbors(currentNode, grid);
     for (const neighbor of neighbors) {
@@ -28,7 +33,19 @@ export function dfs(grid, startNode, finishNode) {
       }
     }
   }
-  return visitedNodesInOrder;
+
+  if (foundFinishNode) {
+    let currentNode = finishNode;
+    while (currentNode !== null) {
+      shortestPath.unshift(currentNode);
+      currentNode = currentNode.previousNode;
+    }
+  }
+
+  return {
+    visitedNodesInOrder,
+    shortestPath,
+  };
 }
 
 function getUnvisitedNeighbors(node, grid) {
