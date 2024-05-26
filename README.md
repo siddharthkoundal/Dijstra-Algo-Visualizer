@@ -4,7 +4,7 @@ This project is a web application that visualizes various path-finding algorithm
 
 ## Live Demo
 
-You can see the project in action at [Your Site Link].
+You can see the project in action at [[Your Site Link]](https://visualizer-project.netlify.app/).
 
 ## Features
 
